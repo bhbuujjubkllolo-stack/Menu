@@ -12,7 +12,7 @@ osx.kivy_version = 2.1.0
 fullscreen = 1
 
 android.permissions = INTERNET, SYSTEM_ALERT_WINDOW
-android.api = 33
+android.api = 34
 android.minapi = 21
 android.ndk_api = 21
 android.archs = arm64-v8a
