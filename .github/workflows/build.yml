@@ -27,14 +27,9 @@ jobs:
 
     - name: Build with Buildozer
       run: |
-        # Ép hệ thống tự động đồng ý với tất cả điều khoản SDK bằng tổ hợp lệnh yes
-        mkdir -p ~/.android
-        touch ~/.android/repositories.cfg
-        yes | buildozer -v android debug
+        buildozer -v android debug
       env:
-        # Biến môi trường hỗ trợ buildozer
         ACCEPT_ANDROID_SDK_LICENSES: "y"
-        BUILDOZER_ALLOW_KIVY_NEW_DESIGN: "1"
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
