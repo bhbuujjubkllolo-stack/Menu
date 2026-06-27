@@ -2,8 +2,8 @@ name: Build Android APK
 
 on:
   push:
-    branches: [ "main" ] # Tự động chạy mỗi khi bạn cập nhật code ở nhánh main
-  workflow_dispatch: # Cho phép bạn bấm nút "Chạy bằng tay" nếu muốn
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,30 +11,33 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-size: '3.10'
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y openjdk-17-jdk libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev
+        sudo apt install -y openjdk-17-jdk libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev autoconf
         pip install --upgrade pip
         pip install buildozer cython virtualenv
 
     - name: Build with Buildozer
       run: |
-        YES=1 buildozer -v android debug
+        # Ép hệ thống tự động đồng ý với tất cả điều khoản SDK bằng tổ hợp lệnh yes
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        yes | buildozer -v android debug
       env:
-        # Chấp nhận các điều khoản SDK của Android tự động
+        # Biến môi trường hỗ trợ buildozer
         ACCEPT_ANDROID_SDK_LICENSES: "y"
+        BUILDOZER_ALLOW_KIVY_NEW_DESIGN: "1"
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
-     
       with:
         name: FPS-Helper-APK
         path: bin/*.apk
